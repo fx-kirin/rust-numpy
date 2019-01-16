@@ -189,7 +189,7 @@ impl PyArray {
 
 impl<'source> FromPyObject<'source> for PyArray {
     fn extract(py: Python, obj: &'source PyObject) -> PyResult<Self> {
-        Ok(obj.clone_ref(py).cast_into::<PyArray>(py)?)
+        Ok(obj.to_py_object(py).into_object().cast_into::<PyArray>(py)?)
     }
 }
 
@@ -233,13 +233,13 @@ impl PythonObjectWithCheckedDowncast for PyArray {
     fn downcast_from<'p>(py: Python<'p>,
                          obj: PyObject)
                          -> Result<PyArray, PythonObjectDowncastError<'p>> {
-        let np = PyArrayModule::import(py).unwrap();
+        //let np = PyArrayModule::import(py).unwrap();
         unsafe {
-            if npyffi::PyArray_Check(&np, obj.as_ptr()) != 0 {
+            //if npyffi::PyArray_Check(&np, obj.as_ptr()) != 0 {
                 Ok(PyArray(obj))
-            } else {
-                Err(PythonObjectDowncastError(py))
-            }
+            //} else {
+                //Err(PythonObjectDowncastError(py))
+            //}
         }
     }
 
